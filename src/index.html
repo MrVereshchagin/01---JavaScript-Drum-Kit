@@ -60,16 +60,28 @@
      <!-- интересно добавление audio не в разметке в div, так всегда? -->
 
     <script>
-      window.addEventListener('keydown', function(e) {
+      
+      function playSound(e) {
         const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
         /* Обращение к элементам и их его атрибутам всегда через []? */
         const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
         if(!audio) return; // не совсем понятно, что имеется ввиду?
         audio.currentTime = 0;
         audio.play();
-        /* обращаемся к свойству и методу audio - как она стал объектом? */
-        key.classList.add('playing'); // тот же самый вопрос про key - как стал объектом?
-      });
+        /* обращаемся к свойству и методу audio - как она стал объектом или мы обращаемся к нему как к узлу DOM? */
+        key.classList.add('playing'); /* тот же самый вопрос про key - как стал объектом?
+        указанным выше выражением мы добавляем класс .playing (почему без точки?) или это встроенный тип обрабатываемого события? */ 
+      };
+
+      function removeTransition(e) {
+        if(e.propertyName !== 'transform') return;
+        this.classList.remove('playing');
+      }
+      
+      const keys = document.querySelectorAll('.key');
+      keys.forEach(key => key.addEventListener('transitionend', removeTransition))
+
+      window.addEventListener('keydown', playSound);
     </script>
     
     
